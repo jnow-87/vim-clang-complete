@@ -180,6 +180,14 @@ function! s:ClangCompleteInit()
 
   if g:clang_make_default_keymappings == 1
     inoremap <expr> <buffer> <C-X><C-U> <SID>LaunchCompletion()
+    inoremap <expr> <buffer> <tab> <sid>LaunchCompletionWrapper("\<tab>")
+    inoremap <silent> <buffer> <c-n> <esc>:python updateSnips(0)<CR>
+    nnoremap <silent> <buffer> <c-n> :python updateSnips(0)<CR>
+    snoremap <silent> <buffer> <c-n> <esc>:python updateSnips(0)<CR>
+    inoremap <silent> <buffer> <c-p> <esc>:python updateSnips(1)<CR>
+    nnoremap <silent> <buffer> <c-p> :python updateSnips(1)<CR>
+    snoremap <silent> <buffer> <c-p> <esc>`<:python updateSnips(1)<CR>
+    inoremap <expr> <buffer> <s-tab> pumvisible() ? "\<c-p>" : "\<tab>"
     inoremap <expr> <buffer> . <SID>CompleteDot()
     inoremap <expr> <buffer> > <SID>CompleteArrow()
     inoremap <expr> <buffer> : <SID>CompleteColon()
@@ -581,6 +589,36 @@ function! s:ShouldComplete()
       endif
     endfor
     return 1
+  endif
+endfunction
+
+function s:LaunchCompletionWrapper(key)
+  if pumvisible()
+    return "\<c-n>"
+  endif
+
+  let line = getline('.')
+  let pos = getpos('.')
+  let char = line[pos[2]-2]
+
+  if char == '('
+    return "\<backspace>" . s:LaunchCompletion()
+
+  elseif match(char, "[a-zA-Z_]") == 0
+    return s:LaunchCompletion()
+
+  else
+    let charp = line[pos[2] - 3]
+    let charpp = line[pos[2] - 4]
+
+    if (char == ":" && charp == ":" && match(charpp, "[a-zA-Z_]") == 0)
+       \ || (char == ">" && charp == "-" && match(charpp, "[a-zA-Z_]") == 0)
+       \ || (char == "." && match(charp, "[a-zA-Z_]") == 0)
+
+      return s:LaunchCompletion() 
+    else
+      return a:key
+    endif
   endif
 endfunction
 
