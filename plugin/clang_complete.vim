@@ -113,7 +113,7 @@ function! s:ClangCompleteInit()
   endif
 
   if !exists('g:clang_auto_user_options')
-    let g:clang_auto_user_options = '.clang_complete, path'
+    let g:clang_auto_user_options = '.clang_complete, .clang, path'
   endif
 
   if !exists('g:clang_jumpto_declaration_key')
@@ -241,7 +241,7 @@ function! LoadUserOptions()
       call s:parsePathOption()
     elseif l:source == 'compile_commands.json'
       call s:findCompilationDatase(l:source)
-    elseif l:source == '.clang_complete'
+    elseif l:source == '.clang_complete' || l:source == '.clang'
       call s:parseConfig()
     else
       let l:getopts = 'getopts#' . l:source . '#getopts'
@@ -311,7 +311,11 @@ endfunction
 function! s:parseConfig()
   let l:local_conf = findfile('.clang_complete', getcwd() . ',.;')
   if l:local_conf == '' || !filereadable(l:local_conf)
-    return
+    let l:local_conf = findfile('.clang', getcwd() . ',.;')
+
+    if l:local_conf == '' || !filereadable(l:local_conf)
+      return
+    endif
   endif
 
   let l:sep = '/'
