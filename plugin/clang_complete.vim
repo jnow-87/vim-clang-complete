@@ -492,7 +492,6 @@ function! ClangComplete(findstart, base)
       inoremap <expr> <buffer> <CR> <SID>HandlePossibleSelectionEnter()
     endif
     augroup ClangComplete
-      au CursorMovedI <buffer> call <SID>TriggerSnippet()
       if exists('##CompleteDone')
         au CompleteDone,InsertLeave <buffer> call <SID>StopMonitoring()
       else
