@@ -12,8 +12,8 @@ if exists('g:clang_complete_loaded')
 endif
 let g:clang_complete_loaded = 1
 
-au FileType c,cpp,objc,objcpp call <SID>ClangCompleteInit()
-au FileType c.*,cpp.*,objc.*,objcpp.* call <SID>ClangCompleteInit()
+au FileType c,cpp,objc,objcpp call s:ClangCompleteInit()
+au FileType c.*,cpp.*,objc.*,objcpp.* call s:ClangCompleteInit()
 
 let b:clang_parameters = ''
 let b:clang_user_options = ''
@@ -214,7 +214,7 @@ function! s:ClangCompleteInit()
 
   if g:clang_periodic_quickfix == 1
     augroup ClangComplete
-      au CursorHold,CursorHoldI <buffer> call <SID>DoPeriodicQuickFix()
+      au CursorHold,CursorHoldI <buffer> call s:DoPeriodicQuickFix()
     augroup end
   endif
 
@@ -493,9 +493,9 @@ function! ClangComplete(findstart, base)
     endif
     augroup ClangComplete
       if exists('##CompleteDone')
-        au CompleteDone,InsertLeave <buffer> call <SID>StopMonitoring()
+        au CompleteDone,InsertLeave <buffer> call s:StopMonitoring()
       else
-        au InsertLeave <buffer> call <SID>StopMonitoring()
+        au InsertLeave <buffer> call s:StopMonitoring()
       endif
     augroup end
     let b:snippet_chosen = 0
