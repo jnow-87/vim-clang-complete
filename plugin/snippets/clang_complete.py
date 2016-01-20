@@ -51,9 +51,9 @@ def updateSnips(reverse):
     result = reg.search(line)
     if result is None:
       if reverse:
-        vim.command('call feedkeys("i\<c-p>", "n")')
+        vim.command('call feedkeys("i\<right>\<c-p>", "n")')
       else:
-        vim.command('call feedkeys("i\<c-n>", "n")')
+        vim.command('call feedkeys("i\<right>\<c-n>", "n")')
       return
 
   # get start and end position of match
