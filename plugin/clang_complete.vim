@@ -633,7 +633,7 @@ function! s:LaunchCompletion()
       let l:result .= "\<C-P>"
     endif
     if g:clang_auto_select == 1
-      let l:result .= "\<C-R>=(pumvisible() ? \"\\<Down>\" : '')\<CR>"
+      let l:result .= "\<C-R>=(pumvisible() ? \"\\<Down>\" : \"\\<esc>i\\<right>\\<c-n>\")\<CR>"
     endif
   endif
   return l:result
