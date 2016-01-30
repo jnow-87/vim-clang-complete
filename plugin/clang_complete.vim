@@ -578,23 +578,6 @@ function! s:TriggerSnippet()
   endif
 endfunction
 
-function! s:ShouldComplete()
-  if (getline('.') =~ '#\s*\(include\|import\)')
-    return 0
-  else
-    if col('.') == 1
-      return 1
-    endif
-    for l:id in synstack(line('.'), col('.') - 1)
-      if match(synIDattr(l:id, 'name'), '\CComment\|String\|Number')
-            \ != -1
-        return 0
-      endif
-    endfor
-    return 1
-  endif
-endfunction
-
 function s:LaunchCompletionWrapper(key)
   if pumvisible()
     return "\<c-n>"
@@ -626,16 +609,20 @@ function s:LaunchCompletionWrapper(key)
 endfunction
 
 function! s:LaunchCompletion()
-  let l:result = ""
-  if s:ShouldComplete()
-    let l:result = "\<C-X>\<C-U>"
-    if g:clang_auto_select != 2
-      let l:result .= "\<C-P>"
-    endif
-    if g:clang_auto_select == 1
-      let l:result .= "\<C-R>=(pumvisible() ? \"\\<Down>\" : \"\\<esc>i\\<right>\\<c-n>\")\<CR>"
-    endif
+  " do not complete header files
+  if (getline('.') =~ '#\s*\(include\|import\)')
+    return ''
   endif
+
+  let l:result = "\<C-X>\<C-U>"
+
+  if g:clang_auto_select != 2
+    let l:result .= "\<C-P>"
+  endif
+  if g:clang_auto_select == 1
+    let l:result .= "\<C-R>=(pumvisible() ? \"\\<Down>\" : \"\\<esc>i\\<right>\\<c-n>\")\<CR>"
+  endif
+
   return l:result
 endfunction
 
