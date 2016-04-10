@@ -188,6 +188,7 @@ function! s:ClangCompleteInit()
     nnoremap <silent> <buffer> <c-p> :python updateSnips(1)<CR>
     snoremap <silent> <buffer> <c-p> <esc>`<:python updateSnips(1)<CR>
     inoremap <expr> <buffer> <s-tab> pumvisible() ? "\<c-p>" : "\<tab>"
+    inoremap <expr> <buffer> <cr> pumvisible() ? "\<c-y>" : "\<cr>"
     inoremap <expr> <buffer> . <SID>CompleteDot()
     inoremap <expr> <buffer> > <SID>CompleteArrow()
     inoremap <expr> <buffer> : <SID>CompleteColon()
