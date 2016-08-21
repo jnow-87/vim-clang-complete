@@ -119,6 +119,13 @@ If equal to 1, it will highlight the warnings and errors the same way clang
 does it.
 Default: 1
 
+					*clang_complete-fallback*
+					*g:clang_complete_fallback*
+If set, user-triggered completions will fall back to <c-n>-completion if no
+clang match has been found
+Default: 0
+
+
        				       	*clang_complete-periodic_quickfix*
        				       	*g:clang_periodic_quickfix*
 If equal to 1, it will periodically update the quickfix window.

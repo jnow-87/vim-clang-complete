@@ -19,6 +19,10 @@ let b:clang_parameters = ''
 let b:clang_user_options = ''
 let b:my_changedtick = 0
 
+" use fallback completion '<c-n>' if no clang completion was found
+let g:clang_complete_fallback = get(g:, "clang_complete_fallback", 0)
+let s:complete_fallback = 0
+
 " Store plugin path, as this is available only when sourcing the file,
 " not during a function call.
 let s:plugin_path = escape(expand('<sfile>:p:h'), '\')
@@ -588,6 +592,12 @@ function s:LaunchCompletionWrapper(key)
   let pos = getpos('.')
   let char = line[pos[2]-2]
 
+  let s:complete_fallback = 0
+
+  if g:clang_complete_fallback == 1
+    let s:complete_fallback = 1
+  endif
+
   if char == '('
     return "\<backspace>" . s:LaunchCompletion()
 
@@ -621,8 +631,14 @@ function! s:LaunchCompletion()
     let l:result .= "\<C-P>"
   endif
   if g:clang_auto_select == 1
-    let l:result .= "\<C-R>=(pumvisible() ? \"\\<Down>\" : \"\\<esc>i\\<right>\\<c-n>\")\<CR>"
+    if s:complete_fallback == 0
+      let l:result .= "\<C-R>=(pumvisible() ? \"\\<Down>\" : '')\<CR>"
+    else
+      let l:result .= "\<C-R>=(pumvisible() ? \"\\<Down>\" : \"\\<esc>i\\<right>\\<c-n>\")\<CR>"
+    endif
   endif
+ 
+  let s:complete_fallback = 0
 
   return l:result
 endfunction
