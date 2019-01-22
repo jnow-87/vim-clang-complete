@@ -626,16 +626,20 @@ function! s:LaunchCompletion()
   endif
 
   let l:result = "\<C-X>\<C-U>"
+  let l:select_key = ""
 
   if g:clang_auto_select != 2
     let l:result .= "\<C-P>"
-  endif
-  if g:clang_auto_select == 1
-    if s:complete_fallback == 0
-      let l:result .= "\<C-R>=(pumvisible() ? \"\\<Down>\" : '')\<CR>"
-    else
-      let l:result .= "\<C-R>=(pumvisible() ? \"\\<Down>\" : \"\\<esc>i\\<right>\\<c-n>\")\<CR>"
+
+    if g:clang_auto_select == 1
+      let l:select_key = "\\<Down>"
     endif
+  endif
+
+  if s:complete_fallback == 0
+    let l:result .= "\<C-R>=(pumvisible() ? \"" . l:select_key . "\" : '')\<CR>"
+  else
+    let l:result .= "\<C-R>=(pumvisible() ? \"" . l:select_key . "\" : \"\\<esc>i\\<right>\\<c-n>\")\<CR>"
   endif
  
   let s:complete_fallback = 0
